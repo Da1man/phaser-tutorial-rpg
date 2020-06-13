@@ -1,5 +1,5 @@
 import Phaser from 'phaser';
-import tilesPNG from '../assets/map/spritesheet.png';
+import tilesPNG from '../assets/map/spritesheet-extruded.png';
 import tileMapJson from '../assets/map/map.json';
 import playerPNG from '../assets/RPG_assets.png';
 
@@ -10,7 +10,7 @@ export default class BootScene extends Phaser.Scene {
 
   preload() {
     // тайлы для карты
-    this.load.image('tiles', tilesPNG);
+    this.load.spritesheet('tiles', tilesPNG, {frameWidth: 18, frameHeight: 18});
 
     // карта в json формате
     this.load.tilemapTiledJSON('map', tileMapJson);

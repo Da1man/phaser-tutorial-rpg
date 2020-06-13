@@ -18,6 +18,11 @@ export default class WorldScene extends Phaser.Scene {
     this.createMap();
     this.createPlayer();
     this.setCamera();
+
+    this.createSpawns();
+
+    this.createCollides();
+    this.createOverlaps();
   }
 
   createMap() {
@@ -35,6 +40,34 @@ export default class WorldScene extends Phaser.Scene {
     this.cameras.main.startFollow(this.player.hero);
     //своего рода хак, чтобы предотвратить пояление полос в тайлах
     this.cameras.main.roundPixels = true;
+  }
+
+  createSpawns() {
+    this.spawns = this.physics.add.group({classType: Phaser.GameObjects.Zone});
+    for (let i = 0; i < 30; i++) {
+      const x = Phaser.Math.RND.between(0, this.physics.world.bounds.width);
+      const y = Phaser.Math.RND.between(0, this.physics.world.bounds.height);
+      this.spawns.create(x, y, 20,20);
+    }
+    this.physics.add.overlap(this.player.hero, this.spawns, this.onMeetEnemy, false, this)
+  }
+
+  onMeetEnemy(player, zone) {
+    // мы перемещаем зону в другое место
+    zone.x = Phaser.Math.RND.between(0, this.physics.world.bounds.width);
+    zone.y = Phaser.Math.RND.between(0, this.physics.world.bounds.height);
+
+    // встряхиваем мир
+    this.cameras.main.flash(300)
+
+    // начало боя
+  }
+
+  createCollides() {
+    this.physics.add.collider(this.player.hero, this.map.obstacles);
+  }
+
+  createOverlaps() {
   }
 
   update(time, delta) {
