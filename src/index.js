@@ -1,6 +1,8 @@
 import Phaser from "phaser";
 import BootScene from "./scenes/BootScene";
 import WorldScene from "./scenes/WorldScene";
+import BattleScene from "./scenes/BattleScene";
+import UIScene from "./scenes/UIScene";
 
 const config = {
   type: Phaser.AUTO,
@@ -15,7 +17,7 @@ const config = {
       gravity: { y: 0 }
     }
   },
-  scene: [BootScene, WorldScene],
+  scene: [BootScene, WorldScene, BattleScene, UIScene],
   scale: {
     mode: Phaser.Scale.FIT,
     autoCenter: Phaser.Scale.CENTER_BOTH
