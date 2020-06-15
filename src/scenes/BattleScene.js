@@ -39,9 +39,38 @@ export default class BattleScene extends Phaser.Scene {
     this.units = this.heroes.concat(this.enemies);
 
 
-    // Одновременно запускаем сцену UI Scene 
+    // Одновременно запускаем сцену UI Scene
     this.scene.launch('UIScene')
+
+    this.index = -1;
   }
 
+  nextTurn() {
+    this.index++;
+    // если юнитов больше нет, то начинаем сначала с первого
+    if(this.index >= this.units.length) {
+      this.index = 0;
+    }
+    if(this.units[this.index]) {
+      // если это герой игрока
+      if(this.units[this.index] instanceof PlayerCharacter) {
+        this.events.emit('PlayerSelect', this.index);
+      } else { // иначе если это юнит врага
+        // выбираем случайного героя
+        var r = Math.floor(Math.random() * this.heroes.length);
+        // и вызываем функцию атаки юнита врага
+        this.units[this.index].attack(this.heroes[r]);
+        // добавляем задержку на следующий ход, чтобы был плавный игровой процесс
+        this.time.addEvent({ delay: 3000, callback: this.nextTurn, callbackScope: this });
+      }
+    }
+  }
+
+  receivePlayerSelection(action, target) {
+    if(action == 'attack') {
+      this.units[this.index].attack(this.enemies[target]);
+    }
+    this.time.addEvent({ delay: 3000, callback: this.nextTurn, callbackScope: this });
+  }
 
 }

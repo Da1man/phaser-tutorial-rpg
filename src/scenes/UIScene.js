@@ -2,6 +2,7 @@ import Phaser from 'phaser';
 import HeroesMenu from "../classes/HeroesMenu";
 import ActionsMenu from "../classes/ActionsMenu";
 import EnemiesMenu from "../classes/EnemiesMenu";
+import Message from "../classes/Message";
 
 export default class UIScene extends Phaser.Scene {
   constructor() {
@@ -42,17 +43,45 @@ export default class UIScene extends Phaser.Scene {
     this.remapEnemies();
 
     this.input.keyboard.on('keydown', this.onKeyInput, this);
+
+    this.battleScene.events.on("PlayerSelect", this.onPlayerSelect, this);
+    this.events.on('SelectEnemies', this.onSelectEnemies, this);
+    this.events.on("Enemy", this.onEnemy, this);
+
+
+    this.battleScene.nextTurn();
+    this.message = new Message(this, this.battleScene.events);
+    this.add.existing(this.message);
+  }
+
+  onEnemy(index) {
+    this.heroesMenu.deselect();
+    this.actionsMenu.deselect();
+    this.enemiesMenu.deselect();
+    this.currentMenu = null;
+    this.battleScene.receivePlayerSelection('attack', index);
+  }
+
+  onSelectEnemies() {
+    this.currentMenu = this.enemiesMenu;
+    this.enemiesMenu.select(0);
+  }
+
+  onPlayerSelect(id) {
+    this.heroesMenu.select(id);
+    this.actionsMenu.select(0);
+    this.currentMenu = this.actionsMenu;
   }
 
   onKeyInput(event) {
-    if (this.currentMenu) {
-      if (event.code === 'ArrowUp') {
+    if(this.currentMenu) {
+      if(event.code === "ArrowUp") {
         this.currentMenu.moveSelectionUp();
-      } else if (event.code === 'ArrowDown') {
+      } else if(event.code === "ArrowDown") {
         this.currentMenu.moveSelectionDown();
-      } else if (event.code === 'ArrowRight' || event.code === "Shift") {
+      } else if(event.code === "ArrowRight" || event.code === "Shift") {
 
-      } else if (event.code === "Space" || event.code === "ArrowLeft") {
+      } else if(event.code === "Space" || event.code === "ArrowLeft") {
         this.currentMenu.confirm();
       }
     }

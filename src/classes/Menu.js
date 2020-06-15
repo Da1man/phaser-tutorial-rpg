@@ -3,12 +3,12 @@ import MenuItem from "./MenuItem";
 
 
 export default class Menu extends Phaser.GameObjects.Container {
-  constructor(x, y, scene, heroes){
+  constructor(x, y, scene, heroes) {
     super(scene, x, y);
     this.scene = scene;
-    this.heroes = heroes;
     this.menuItems = [];
     this.menuItemIndex = 0;
+    this.heroes = heroes;
     this.x = x;
     this.y = y;
   }
@@ -24,8 +24,8 @@ export default class Menu extends Phaser.GameObjects.Container {
     this.menuItemIndex--;
     if (this.menuItemIndex < 0) {
       this.menuItemIndex = this.menuItems.length - 1;
-      this.menuItems[this.menuItemIndex].select();
     }
+    this.menuItems[this.menuItemIndex].select();
   }
 
   moveSelectionDown() {
@@ -33,8 +33,8 @@ export default class Menu extends Phaser.GameObjects.Container {
     this.menuItemIndex++;
     if (this.menuItemIndex >= this.menuItems.length) {
       this.menuItemIndex = 0;
-      this.menuItems[this.menuItemIndex].select();
     }
+    this.menuItems[this.menuItemIndex].select();
   }
 
   // выбрать меню целиком и элемент с индексом в нем
